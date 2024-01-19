@@ -7,13 +7,79 @@
 	(5) 댓글삭제
  */
 
+$(document).ready(function(){
+    storyLoad();
+});
+
 // (1) 스토리 로드하기
 function storyLoad() {
-
+    $.ajax({
+        type: "POST",
+        url: "/api/story",
+        dataType: "json"
+    }).done(res => {
+        console.dir(res);
+        res.data.forEach((e)=>{
+            $("#storyList").append(getStoryItem(e));
+        })
+    }).fail(error => {
+        console.dir(error);
+    });
 }
 
-function getStoryItem() {
+function getStoryItem(e) {
+    let item = `<!--전체 리스트 아이템-->
+                <div class="story-list__item">
+                    <div class="sl__item__header">
+                    	<div>
+                    		<img class="profile-image" src="/upload/${e.user.profileImageUrl}"
+                    			onerror="this.src='/images/person.jpeg'" />
+                    	</div>
+                    	<div>${e.user.username}</div>
+                    </div>
 
+                    <div class="sl__item__img">
+                    	<img src="/upload/${e.postImageUrl}" />
+                    </div>
+
+                    <div class="sl__item__contents">
+                    	<div class="sl__item__contents__icon">
+
+                    		<button>
+                    			<i class="fas fa-heart active" id="storyLikeIcon-1" onclick="toggleLike()"></i>
+                    		</button>
+                    	</div>
+
+                    	<span class="like"><b id="storyLikeCount-1">3 </b>likes</span>
+
+                    	<div class="sl__item__contents__content">
+                    		<p>${e.caption}</p>
+                    	</div>
+
+                    	<div id="storyCommentList-1">
+
+                    		<div class="sl__item__contents__comment" id="storyCommentItem-1"">
+                    			<p>
+                    				<b>Lovely :</b> 부럽습니다.
+                    			</p>
+
+                    			<button>
+                    				<i class="fas fa-times"></i>
+                    			</button>
+
+                    		</div>
+
+                    	</div>
+
+                    	<div class="sl__item__input">
+                    		<input type="text" placeholder="댓글 달기..." id="storyCommentInput-1" />
+                    		<button type="button" onClick="addComment()">게시</button>
+                    	</div>
+
+                    </div>
+                </div>`;
+
+    return item;
 }
 
 // (2) 스토리 스크롤 페이징하기
