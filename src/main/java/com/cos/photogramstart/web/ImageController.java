@@ -24,16 +24,6 @@ public class ImageController {
 	
 	@GetMapping({"/","/image/story"})
 	String story(Model model, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-		// 팔로우 user 정보
-		// 팔로우 user 업로드 이미지
-		// 팔로우 user 이미지 좋아요 수
-		// 팔로우 user 댓글
-		List<Image> story = imageService.스토리조회(principalDetails.getUser().getId());
-		
-		//System.out.println(story);
-		
-		model.addAttribute("story", story);
-		
 		return "/image/story";
 	}
 	

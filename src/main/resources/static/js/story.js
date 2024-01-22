@@ -15,11 +15,11 @@ $(document).ready(function(){
 function storyLoad() {
     $.ajax({
         type: "POST",
-        url: "/api/story",
+        url: "/api/story?page=0",
         dataType: "json"
     }).done(res => {
         console.dir(res);
-        res.data.forEach((e)=>{
+        res.data.content.forEach((e)=>{
             $("#storyList").append(getStoryItem(e));
         })
     }).fail(error => {

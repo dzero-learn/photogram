@@ -7,13 +7,13 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.Query;
 import javax.persistence.EntityManager;
-import org.springframework.transaction.annotation.Transactional;
 
-import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cos.photogramstart.config.auth.PrincipalDetails;
 import com.cos.photogramstart.domain.image.Image;
@@ -32,9 +32,9 @@ public class ImageService {
 	private String uploadFolder;
 	
 	@Transactional(readOnly = true)
-	public List<Image> 스토리조회(int principalId) {
+	public Page<Image> 스토리조회(int principalId, Pageable pageable) {
 		// 구독정보 조회
-		List<Image> story = imageRepository.mStory(principalId);
+		Page<Image> story = imageRepository.mStory(principalId, pageable);
 		
 		return story;
 	}
