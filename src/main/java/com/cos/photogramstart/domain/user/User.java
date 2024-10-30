@@ -52,7 +52,7 @@ public class User {
 	
 	private LocalDateTime createDate;
 	
-	@PrePersist
+	@PrePersist // 디비에 insert되기 직전에 실행
 	public void createDate() {
 		this.createDate = createDate.now();
 	}
