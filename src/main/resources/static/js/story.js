@@ -7,21 +7,24 @@
 	(5) 댓글삭제
  */
 
+let page = 0;
+
 $(document).ready(function(){
-    storyLoad();
+    storyLoad(page);
 });
 
 // (1) 스토리 로드하기
-function storyLoad() {
+function storyLoad(page) {
     $.ajax({
         type: "POST",
-        url: "/api/story?page=0",
+        url: `/api/story?page=${page}`,
         dataType: "json"
     }).done(res => {
+    	console.log("page",page);
         console.dir(res);
         res.data.content.forEach((e)=>{
             $("#storyList").append(getStoryItem(e));
-        })
+        });
     }).fail(error => {
         console.dir(error);
     });
@@ -29,7 +32,7 @@ function storyLoad() {
 
 function getStoryItem(e) {
     let item = `<!--전체 리스트 아이템-->
-                <div class="story-list__item">
+                <div class="story-list__item"> 
                     <div class="sl__item__header">
                     	<div>
                     		<img class="profile-image" src="/upload/${e.user.profileImageUrl}"
@@ -84,7 +87,12 @@ function getStoryItem(e) {
 
 // (2) 스토리 스크롤 페이징하기
 $(window).scroll(() => {
-
+	let checkLastPosition = $(document).height() - ($(window).scrollTop() + $(window).height());
+	
+	if(checkLastPosition < 1 && checkLastPosition > -1) {
+		page++;
+		storyLoad(page);
+	}
 });
 
 
