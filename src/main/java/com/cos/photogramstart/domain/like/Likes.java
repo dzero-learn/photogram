@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(
-        uniqueConstraints = {
+        uniqueConstraints = { // 유니크 제약조건
                 @UniqueConstraint(
                         name="likes_uk",
                         columnNames = {
@@ -31,13 +31,18 @@ public class Likes {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 번호증가규칙이 데이터베이스를 따라감
     private int id;
 
-    private int userId;
-    private int imageId;
+    @JoinColumn(name="imageId") //imageId로 컬럼명을 만들어라.
+    @ManyToOne
+    private Image imageId; // like(n) : image(1)
+
+    @JoinColumn(name="userId") // userId로 컬럼명을 만들어라.
+    @ManyToOne // ManyToOne는 기본전략이 eager 전략이다.
+    private User userId; // like(n) : user(1)
 
     private LocalDateTime createDate;
 
     @PrePersist
     public void createDate() {
-        this.createDate = createDate.now();
+        this.createDate = createDate.now(); // 네이티브쿼리에서는 이게 안 먹히니 쿼리에 직접 now() 적어줘야함, likesRepository 참고.
     }
 }

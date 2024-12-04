@@ -7,6 +7,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,17 +32,15 @@ public class ImageApiController {
 		return new ResponseEntity<>(new CMRespDto<>(1,"스토리 조회 성공",story), HttpStatus.OK);
 	}
 
-	@PostMapping("/api/{id}/likes")
-	public ResponseEntity<CMRespDto<Object>> likes(@PathVariable int id, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-		likesService.좋아요(id, principalDetails.getUser().getId());
-
-		return new ResponseEntity<>(new CMRespDto<>(1, "좋아요 성공",null),HttpStatus.CREATED);
+	@PostMapping("/api/image/{imageId}/likes")
+	public ResponseEntity<CMRespDto<Object>> likes(@PathVariable int imageId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		likesService.좋아요(imageId, principalDetails.getUser().getId());
+		return new ResponseEntity<>(new CMRespDto<>(1,"좋아요 성공",null),HttpStatus.CREATED);
 	}
 
-	@PostMapping("/api/{id}/unlikes")
-	public ResponseEntity<CMRespDto<Object>> unLikes(@PathVariable int id, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-		likesService.좋아요취소(id, principalDetails.getUser().getId());
-
-		return new ResponseEntity<>(new CMRespDto<>(1, "좋아요 취소",null),HttpStatus.OK);
+	@DeleteMapping("/api/image/{imageId}/likes")
+	public ResponseEntity<CMRespDto<Object>> unLikes(@PathVariable int imageId, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+		likesService.좋아요취소(imageId, principalDetails.getUser().getId());
+		return new ResponseEntity<>(new CMRespDto<>(1,"좋아요 취소성공",null),HttpStatus.OK);
 	}
 }
