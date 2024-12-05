@@ -37,6 +37,8 @@ public class ImageService {
 		Page<Image> story = imageRepository.mStory(principalId, pageable);
 
 		story.getContent().forEach(image -> {
+			image.setLikeCount(image.getLikes().size());
+
 			image.getLikes().forEach(likes ->{
 				if(likes.getUserId().getId() == principalId) {
 					image.setLikeState(true); // 사용자가 좋아요한 데이터가 있으면 이미지 좋아요 상태 true

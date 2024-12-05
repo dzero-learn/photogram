@@ -31,9 +31,6 @@ function storyLoad(page) {
 }
 
 function getStoryItem(e) {
-    // "fas fa-heart active"; 좋아요 활성화
-    // "far fa-heart"; 좋아요 비활성화
-
     let item = `<!--전체 리스트 아이템-->
                 <div class="story-list__item"> 
                     <div class="sl__item__header">
@@ -52,15 +49,15 @@ function getStoryItem(e) {
                     	<div class="sl__item__contents__icon">
 
                     		<button>`
-                    			if(e.likeState) {
+                    			if(e.likeState) { // 좋아요 한 상태
                     			    item += `<i class="fas fa-heart active" id="storyLikeIcon-${e.id}" onclick="toggleLike(${e.id})"></i>`;
-                    			} else {
+                    			} else { // 좋아요 안 한 상태
                     			    item += `<i class="far fa-heart" id="storyLikeIcon-${e.id}" onclick="toggleLike(${e.id})"></i>`;
                                 }
                   item += `</button>
                     	</div>
 
-                    	<span class="like"><b id="storyLikeCount-1">3 </b>likes</span>
+                    	<span class="like"><b id="storyLikeCount-${e.id}">${e.likeCount} </b>likes</span>
 
                     	<div class="sl__item__contents__content">
                     		<p>${e.caption}</p>
@@ -106,13 +103,16 @@ $(window).scroll(() => {
 // (3) 좋아요, 안좋아요
 function toggleLike(imageId) {
 	let likeIcon = $(`#storyLikeIcon-${imageId}`);
-
+//<span class="like"><b id="storyLikeCount-${e.likeCount}">${e.likeCount} </b>likes</span>
 	if (likeIcon.hasClass("far")) { // 좋아요
         $.ajax({
 	        type: "POST",
             url: `/api/image/${imageId}/likes`,
             dataType: "json"
 	    }).done(res=>{
+	        let likeCount = $(`#storyLikeCount-${imageId}`).text();
+	        $(`#storyLikeCount-${imageId}`).text(Number(likeCount) + 1);
+
 	        likeIcon.addClass("fas");
             likeIcon.addClass("active");
             likeIcon.removeClass("far");
@@ -125,6 +125,9 @@ function toggleLike(imageId) {
                url: `/api/image/${imageId}/likes`,
                dataType: "json"
         }).done(res=>{
+            let likeCount = $(`#storyLikeCount-${imageId}`).text();
+        	$(`#storyLikeCount-${imageId}`).text(Number(likeCount) - 1);
+
             likeIcon.removeClass("fas");
             likeIcon.removeClass("active");
             likeIcon.addClass("far");

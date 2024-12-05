@@ -28,7 +28,7 @@ public class ImageApiController {
 	@PostMapping("/api/story")
 	public ResponseEntity<?> imageStory(@AuthenticationPrincipal PrincipalDetails principalDetails, @PageableDefault(size=3) Pageable pageable) {
 		Page<Image> story = imageService.스토리조회(principalDetails.getUser().getId(), pageable);
-		
+
 		return new ResponseEntity<>(new CMRespDto<>(1,"스토리 조회 성공",story), HttpStatus.OK);
 	}
 

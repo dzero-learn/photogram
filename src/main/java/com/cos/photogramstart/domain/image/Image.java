@@ -38,6 +38,9 @@ public class Image {
 	@Transient // 데이터베이스에 컬럼을 생성하지 않음
 	private boolean likeState;
 
+	@Transient
+	private int likeCount;
+
 	private LocalDateTime createDate;
 
 	@PrePersist
