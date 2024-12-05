@@ -35,7 +35,15 @@ public class ImageService {
 	public Page<Image> 스토리조회(int principalId, Pageable pageable) {
 		// 구독정보 조회
 		Page<Image> story = imageRepository.mStory(principalId, pageable);
-		
+
+		story.getContent().forEach(image -> {
+			image.getLikes().forEach(likes ->{
+				if(likes.getUserId().getId() == principalId) {
+					image.setLikeState(true); // 사용자가 좋아요한 데이터가 있으면 이미지 좋아요 상태 true
+				}
+			});
+		});
+
 		return story;
 	}
 	

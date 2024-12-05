@@ -1,16 +1,11 @@
 package com.cos.photogramstart.domain.image;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
+import javax.persistence.*;
 
+import com.cos.photogramstart.domain.like.Likes;
 import com.cos.photogramstart.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -36,6 +31,12 @@ public class Image {
 	@JoinColumn(name = "userId")
 	@ManyToOne(fetch = FetchType.EAGER)
 	private User user; // 쿼리 짤 때, 굳이 user join 필요x 이미지 조회할때 이 필드 때문에 user정보 같이 들고 온다!
+
+	@OneToMany(mappedBy = "imageId", fetch = FetchType.LAZY)
+	private List<Likes> likes;
+
+	@Transient // 데이터베이스에 컬럼을 생성하지 않음
+	private boolean likeState;
 
 	private LocalDateTime createDate;
 

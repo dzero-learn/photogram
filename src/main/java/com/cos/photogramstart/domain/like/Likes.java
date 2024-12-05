@@ -2,6 +2,7 @@ package com.cos.photogramstart.domain.like;
 
 import com.cos.photogramstart.domain.image.Image;
 import com.cos.photogramstart.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,10 +32,12 @@ public class Likes {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 번호증가규칙이 데이터베이스를 따라감
     private int id;
 
+    @JsonIgnoreProperties("likes")
     @JoinColumn(name="imageId") //imageId로 컬럼명을 만들어라.
     @ManyToOne
     private Image imageId; // like(n) : image(1)
 
+    @JsonIgnoreProperties("images")
     @JoinColumn(name="userId") // userId로 컬럼명을 만들어라.
     @ManyToOne // ManyToOne는 기본전략이 eager 전략이다.
     private User userId; // like(n) : user(1)
