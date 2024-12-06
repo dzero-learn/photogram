@@ -30,7 +30,9 @@ public class ImageController {
 	}
 
 	@GetMapping("/image/popular")
-	String popular() {
+	String popular(Model model) {
+		model.addAttribute("images", imageService.인기사진());
+
 		return "/image/popular";
 	}
 
