@@ -29,9 +29,12 @@ public class ImageController {
 		return "/image/story";
 	}
 
+	// API로 구현한다면? 브라우저에서 요청하는게 아니라, 안드로이드/iOS 요청일 경우.
 	@GetMapping("/image/popular")
 	String popular(Model model) {
-		model.addAttribute("images", imageService.인기사진());
+		// api는 데이터를 리턴하는 서버!!
+		List<Image> images = imageService.인기사진();
+		model.addAttribute("images", images);
 
 		return "/image/popular";
 	}

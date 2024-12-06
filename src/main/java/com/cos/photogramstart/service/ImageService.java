@@ -70,9 +70,8 @@ public class ImageService {
 		//System.out.println(imageEntity);
 	}
 
-    public List<Image> 인기사진() {
-		List<Image> popularImages = imageRepository.mPopular();
-
-		return popularImages;
+    @Transactional(readOnly = true)
+	public List<Image> 인기사진() {
+		return imageRepository.mPopular();
     }
 }
