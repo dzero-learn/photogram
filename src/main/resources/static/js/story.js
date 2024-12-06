@@ -103,7 +103,7 @@ $(window).scroll(() => {
 // (3) 좋아요, 안좋아요
 function toggleLike(imageId) {
 	let likeIcon = $(`#storyLikeIcon-${imageId}`);
-//<span class="like"><b id="storyLikeCount-${e.likeCount}">${e.likeCount} </b>likes</span>
+
 	if (likeIcon.hasClass("far")) { // 좋아요
         $.ajax({
 	        type: "POST",
