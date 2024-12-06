@@ -22,7 +22,9 @@ public class UserController {
 	@GetMapping("/user/{pageUserId}")
 	String profile(@PathVariable int pageUserId, Model model, @AuthenticationPrincipal PrincipalDetails principalDetails){
 		UserProfileDto dto = userService.회원프로필(pageUserId, principalDetails.getUser().getId());
-	
+
+		// UserProfileDto에 likeCount를 만들 수x 이미지마다 좋아요갯수를 들고 있어야되는데 유저에 만들어버리면 좋아요갯수 1개밖에 안들고 있음
+		// likeCount를 어케 가지고 올 수 있을까? -> userService.회원프로필()에서 구현
 		model.addAttribute("dto", dto);
 
 		return "/user/profile";
