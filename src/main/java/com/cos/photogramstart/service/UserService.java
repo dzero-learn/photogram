@@ -2,6 +2,7 @@ package com.cos.photogramstart.service;
 
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,13 @@ import com.cos.photogramstart.handler.ex.CustomValidationApiException;
 import com.cos.photogramstart.web.dto.user.UserProfileDto;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +29,9 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final SubscribeRepository subscribeRepository;
 	private final BCryptPasswordEncoder BCryptPasswordEncoder;
+
+	@Value("${file.path}") // application.yml에 설정된 file:path: 값을 가지고 옴
+	private String uploadFolder;
 
 	public UserProfileDto 회원프로필(int pageUserId, int principalId) {
 		UserProfileDto dto = new UserProfileDto();
@@ -62,4 +73,29 @@ public class UserService {
 
 		return userEntity;
 	} // 더티체킹이 일어나서 자동으로 db update 완료됨.
+
+	@Transactional
+    public User 회원프로필사진변경(int userId, MultipartFile profileImageUrl) {
+
+		UUID uuid = UUID.randomUUID();
+		String imageFileName = uuid+"_"+profileImageUrl.getOriginalFilename();
+
+		System.out.println("이미지 파일 이름:"+imageFileName);
+
+		Path imageFilePath = Paths.get(uploadFolder+imageFileName);
+
+		try {
+			Files.write(imageFilePath, profileImageUrl.getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		// 프로필url update
+		// 1. 영속화
+		User userEntity = userRepository.findById(userId).orElseThrow(()->{return new CustomValidationApiException("찾는 id가 없습니다.");});
+
+		userEntity.setProfileImageUrl(imageFileName);
+
+		return userEntity;
+    } // 더티체킹이 일어나서 자동으로 db update 완료됨.
 }

@@ -20,6 +20,7 @@ import com.cos.photogramstart.web.dto.CMRespDto;
 import com.cos.photogramstart.web.dto.user.UserUpdateDto;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
@@ -46,6 +47,19 @@ public class UserApiController {
 
 			return new CMRespDto<User>(1, "회원정보 수정완료!", userEntity);
 		}
+	}
+
+	@PutMapping("/api/profile/upload/{id}")
+	public CMRespDto<?> profileImageUrlUpdate (@PathVariable int id, MultipartFile userProfileImageForm) {
+
+		if(userProfileImageForm.isEmpty()) {
+			throw new CustomValidationApiException("파일이 첨부되지 않았습니다.", null);
+		}
+
+		User userEntity = userServcie.회원프로필사진변경(id, userProfileImageForm);
+		System.out.println("userEntity : " + userEntity);
+
+		return new CMRespDto<>(1,"프로필 업로드 완료",null);
 	}
 
 }

@@ -86,7 +86,12 @@ function toggleSubscribeModal(userId, obj) {
 }
 
 // (4) 유저 프로파일 사진 변경 (완)
-function profileImageUpload() {
+function profileImageUpload(pageOwnerState, principalId) {
+    if(!pageOwnerState) {
+        alert("프로필을 수정할 수 없는 사용자 입니다.");
+        return;
+    }
+
 	$("#userProfileImageInput").click();
 
 	$("#userProfileImageInput").on("change", (e) => {
@@ -97,12 +102,25 @@ function profileImageUpload() {
 			return;
 		}
 
-		// 사진 전송 성공시 이미지 변경
-		let reader = new FileReader();
-		reader.onload = (e) => {
-			$("#userProfileImage").attr("src", e.target.result);
-		}
-		reader.readAsDataURL(f); // 이 코드 실행시 reader.onload 실행됨.
+        // FormData 객체 생성
+        const formData = new FormData(this); // 폼 데이터 자동 수집
+
+        // jQuery AJAX 요청
+        $.ajax({
+            url: `/api/profile/upload/${principalId}`, // 서버 엔드포인트
+            type: 'PUT',
+            data: formData,
+            processData: false, // 데이터를 문자열로 변환하지 않음
+            contentType: false, // Content-Type 헤더 설정하지 않음 (자동 설정됨)
+        }).done((res) => {
+            // 사진 전송 성공시 이미지 변경
+            let reader = new FileReader();
+            reader.onload = (e) => {
+            	$("#userProfileImage").attr("src", e.target.result);
+            }
+            reader.readAsDataURL(f); // 이 코드 실행시 reader.onload 실행됨.
+        }).fail((err) => {
+            console.error(err);});
 	});
 }
 
