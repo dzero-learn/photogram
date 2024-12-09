@@ -86,8 +86,9 @@ function toggleSubscribeModal(userId, obj) {
 }
 
 // (4) 유저 프로파일 사진 변경 (완)
-function profileImageUpload(pageOwnerState, principalId) {
-    if(!pageOwnerState) {
+function profileImageUpload(pageUserId, principalId) {
+	// 프로필페이지유저, 로그인유저 동일한지 확인
+	if(pageUserId != principalId) {
         alert("프로필을 수정할 수 없는 사용자 입니다.");
         return;
     }
@@ -95,9 +96,6 @@ function profileImageUpload(pageOwnerState, principalId) {
 	$("#userProfileImageInput").click();
 
 	$("#userProfileImageInput").on("change", (e) => {
-		// FormData 객체 생성
-        const formData = new FormData(); // 폼 데이터 자동 수집
-        
 		let f = e.target.files[0];
 
 		if (!f.type.match("image.*")) {
@@ -105,9 +103,12 @@ function profileImageUpload(pageOwnerState, principalId) {
 			return;
 		}
 		
-		formData.append('userProfileImageForm',f);
+		// 서버에 이미지를 전송
+		// form태그 안에 있는 프로필이미지파일을 가지고 와야함
+		let profileImageForm = $("userProfileImageForm");
+		console.dir(profileImageForm);
 
-        // jQuery AJAX 요청
+        /* jQuery AJAX 요청
         $.ajax({
             url: `/api/profile/upload/${principalId}`, // 서버 엔드포인트
             type: 'POST',
@@ -125,6 +126,7 @@ function profileImageUpload(pageOwnerState, principalId) {
             reader.readAsDataURL(f); // 이 코드 실행시 reader.onload 실행됨.
         }).fail((err) => {
             console.error(err);});
+        */
 	});
 }
 
