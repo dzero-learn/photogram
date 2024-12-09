@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,7 +50,7 @@ public class UserApiController {
 		}
 	}
 
-	@PutMapping("/api/profile/upload/{id}")
+	@PostMapping("/api/profile/upload/{id}")
 	public CMRespDto<?> profileImageUrlUpdate (@PathVariable int id, MultipartFile userProfileImageForm) {
 
 		if(userProfileImageForm.isEmpty()) {
@@ -57,9 +58,8 @@ public class UserApiController {
 		}
 
 		User userEntity = userServcie.회원프로필사진변경(id, userProfileImageForm);
-		System.out.println("userEntity : " + userEntity);
 
-		return new CMRespDto<>(1,"프로필 업로드 완료",null);
+		return new CMRespDto<>(1,"프로필 업로드 완료",userEntity);
 	}
 
 }
