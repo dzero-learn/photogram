@@ -105,28 +105,36 @@ function profileImageUpload(pageUserId, principalId) {
 		
 		// 서버에 이미지를 전송
 		// form태그 안에 있는 프로필이미지파일을 가지고 와야함
-		let profileImageForm = $("userProfileImageForm");
+		let profileImageForm = $("#userProfileImageForm")[0];
 		console.dir(profileImageForm);
 
-        /* jQuery AJAX 요청
+		// form 데이터를 전송하려면 formData 객체로 받는다.
+		// FormData 객체를 이용하면 form태그의 필드와 그 값을 나타내는 일련의 key/value쌍을 담을 수 있다.
+		let formData = new FormData(profileImageForm);
+
+		// $.ajax().done().fail(); 이게 원형
+
+        //jQuery AJAX 요청
         $.ajax({
-            url: `/api/profile/upload/${principalId}`, // 서버 엔드포인트
-            type: 'POST',
+            url: `/api/user/${principalId}/profileImageUrl`, // 서버 엔드포인트
+            type: 'put', // 수정
             data: formData,
-            processData: false, // 데이터를 문자열로 변환하지 않음
-            contentType: false, // Content-Type 헤더 설정하지 않음 (자동 설정됨)
+            processData: false, // 필수 : x-www-form-urlencoded로 파싱되는 것을 방지(데이터를 문자열로 변환하지 않음)
+            contentType: false, // 필수 : QueryString 자동 설정됨->해제(Content-Type 헤더 설정하지 않음 (자동 설정됨))
+            enctype: "multipart/form-data", // form태그에 설정되어 있으면 굳이 안 적어도 됨
+            dataType: "json"
         }).done((res) => {
             // 사진 전송 성공시 이미지 변경
             let reader = new FileReader();
-            
+
             reader.onload = (e) => {
             	$("#userProfileImage").attr("src", e.target.result);
             }
             
             reader.readAsDataURL(f); // 이 코드 실행시 reader.onload 실행됨.
         }).fail((err) => {
-            console.error(err);});
-        */
+            console.error("Error:", err);
+        });
 	});
 }
 

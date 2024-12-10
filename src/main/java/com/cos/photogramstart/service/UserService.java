@@ -75,24 +75,24 @@ public class UserService {
 	} // 더티체킹이 일어나서 자동으로 db update 완료됨.
 
 	@Transactional
-    public User 회원프로필사진변경(int userId, MultipartFile profileImageUrl) {
-
+    public User 회원프로필사진변경(int principalId, MultipartFile profileImageFile) {
 		UUID uuid = UUID.randomUUID();
-		String imageFileName = uuid+"_"+profileImageUrl.getOriginalFilename();
-
+		String imageFileName = uuid+"_"+profileImageFile.getOriginalFilename();
 		System.out.println("이미지 파일 이름:"+imageFileName);
 
 		Path imageFilePath = Paths.get(uploadFolder+imageFileName);
 
 		try {
-			Files.write(imageFilePath, profileImageUrl.getBytes());
+			Files.write(imageFilePath, profileImageFile.getBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		// 프로필url update
 		// 1. 영속화
-		User userEntity = userRepository.findById(userId).orElseThrow(()->{return new CustomValidationApiException("찾는 id가 없습니다.");});
+		User userEntity = userRepository.findById(principalId).orElseThrow(()->{
+			return new CustomValidationApiException("유저를 찾을 수 없습니다.");
+		});
 
 		userEntity.setProfileImageUrl(imageFileName);
 
