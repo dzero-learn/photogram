@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.cos.photogramstart.domain.comment.Comment;
 import com.cos.photogramstart.domain.like.Likes;
 import com.cos.photogramstart.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -34,6 +35,10 @@ public class Image {
 
 	@OneToMany(mappedBy = "imageId", fetch = FetchType.LAZY)
 	private List<Likes> likes;
+
+	@JsonIgnoreProperties("image")
+	@OneToMany(mappedBy = "image", fetch = FetchType.LAZY)
+	private List<Comment> comments;
 
 	@Transient // 데이터베이스에 컬럼을 생성하지 않음
 	private boolean likeState;

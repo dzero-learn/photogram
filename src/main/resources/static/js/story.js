@@ -48,12 +48,14 @@ function getStoryItem(e) {
                     <div class="sl__item__contents">
                     	<div class="sl__item__contents__icon">
 
-                    		<button>`
-                    			if(e.likeState) { // 좋아요 한 상태
-                    			    item += `<i class="fas fa-heart active" id="storyLikeIcon-${e.id}" onclick="toggleLike(${e.id})"></i>`;
-                    			} else { // 좋아요 안 한 상태
-                    			    item += `<i class="far fa-heart" id="storyLikeIcon-${e.id}" onclick="toggleLike(${e.id})"></i>`;
-                                }
+                    		<button>`;
+
+                    if(e.likeState) { // 좋아요 한 상태
+                        item += `<i class="fas fa-heart active" id="storyLikeIcon-${e.id}" onclick="toggleLike(${e.id})"></i>`;
+                    } else { // 좋아요 안 한 상태
+                        item += `<i class="far fa-heart" id="storyLikeIcon-${e.id}" onclick="toggleLike(${e.id})"></i>`;
+                    }
+
                   item += `</button>
                     	</div>
 
@@ -63,24 +65,28 @@ function getStoryItem(e) {
                     		<p>${e.caption}</p>
                     	</div>
 
-                    	<div id="storyCommentList-1">
+                    	<div id="storyCommentList-${e.id}">`;
 
-                    		<div class="sl__item__contents__comment" id="storyCommentItem-1"">
-                    			<p>
-                    				<b>Lovely :</b> 부럽습니다.
-                    			</p>
+                  if(e.comments.length > 0) {
+                      e.comments.forEach((comment) => {
+                      item += `<div class="sl__item__contents__comment" id="storyCommentItem-${comment.user.id}">
+                              	<p>
+                              		<b>${comment.user.name} :</b> ${comment.content}
+                              	</p>
 
-                    			<button>
-                    				<i class="fas fa-times"></i>
-                    			</button>
+                              	<button onClick="deleteComment(${e.id},${comment.user.id})">
+                              	    <i class="fas fa-times"></i>
+                              	</button>
 
-                    		</div>
+                              </div>`;
+                      });
+                  }
 
-                    	</div>
+                  item += `</div>
 
                     	<div class="sl__item__input">
-                    		<input type="text" placeholder="댓글 달기..." id="storyCommentInput-1" />
-                    		<button type="button" onClick="addComment()">게시</button>
+                    		<input type="text" placeholder="댓글 달기..." id="storyCommentInput-${e.id}" />
+                    		<button type="button" onClick="addComment(${e.id})">게시</button>
                     	</div>
 
                     </div>
@@ -138,12 +144,13 @@ function toggleLike(imageId) {
 }
 
 // (4) 댓글쓰기
-function addComment() {
+function addComment(imageId) {
 
-	let commentInput = $("#storyCommentInput-1");
-	let commentList = $("#storyCommentList-1");
+	let commentInput = $(`#storyCommentInput-${imageId}`);
+	let commentList = $(`#storyCommentList-${imageId}`);
 
 	let data = {
+	    imageId: imageId,
 		content: commentInput.val()
 	}
 
@@ -151,23 +158,52 @@ function addComment() {
 		alert("댓글을 작성해주세요!");
 		return;
 	}
+	//console.log(JSON.stringify(data));
+	$.ajax({
+	    type:"POST",
+	    url:"/api/comment/",
+	    data: JSON.stringify(data),
+	    contentType: "application/json",
+	    dataType: "json"
+	}).done((res)=>{
+	    console.log("res:",res);
+	    let comment = res.data;
+        let content = `
+            <div class="sl__item__contents__comment" id="storyCommentItem-${comment.user.id}">
+                <p>
+                    <b>${comment.user.name} :</b>
+                        ${comment.content}
+                </p>
+                <button><i class="fas fa-times"></i></button>
+            </div>`;
 
-	let content = `
-			  <div class="sl__item__contents__comment" id="storyCommentItem-2""> 
-			    <p>
-			      <b>GilDong :</b>
-			      댓글 샘플입니다.
-			    </p>
-			    <button><i class="fas fa-times"></i></button>
-			  </div>
-	`;
-	commentList.prepend(content);
+        	commentList.prepend(content);
+	}).fail((err)=>{
+	    console.error("Error:",err);
+	});
+
 	commentInput.val("");
 }
 
 // (5) 댓글 삭제
-function deleteComment() {
+function deleteComment(imageId,principalId) {
+    let data = {
+        imageId : imageId,
+        userId : principalId
+    };
 
+    $.ajax({
+    	    type:"DELETE",
+    	    url:"/api/comment/",
+    	    data: JSON.stringify(data),
+    	    contentType: "application/json",
+    	    dataType: "json"
+    	}).done((res)=>{
+    	    console.log("res:",res);
+    	    $(`#storyCommentItem-${principalId}`).remove();
+    	}).fail((err)=>{
+    	    console.error("Error:",err);
+    	});
 }
 
 
