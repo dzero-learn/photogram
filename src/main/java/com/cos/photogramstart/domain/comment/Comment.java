@@ -21,15 +21,15 @@ public class Comment {
 
     @JsonIgnoreProperties("user")
     @JoinColumn(name = "imageId", nullable = false)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Image image;
 
     @JsonIgnoreProperties("images")
     @JoinColumn(name = "userId", nullable = false)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
-    @Column(nullable = false)
+    @Column(length = 100, nullable = false)
     private String content;
 
     private LocalDateTime createDate;
