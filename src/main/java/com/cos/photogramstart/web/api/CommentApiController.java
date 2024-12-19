@@ -26,10 +26,6 @@ public class CommentApiController {
 
     @DeleteMapping("/api/comment/")
     public ResponseEntity<?> deleteComment(@RequestBody CommentDto commentDto, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        if(commentDto.getUserId() != principalDetails.getUser().getId()) {
-            return new ResponseEntity<>(new CMRespDto<Comment>(0,"댓글을 삭제할 수 없는 유저입니다.",null),HttpStatus.OK);
-        }
-
         commentService.댓글삭제(commentDto);
 
         return new ResponseEntity<>(new CMRespDto<Comment>(1,"댓글삭제 완료",null),HttpStatus.OK);

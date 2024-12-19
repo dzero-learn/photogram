@@ -38,6 +38,7 @@ public class Image {
 
 	@JsonIgnoreProperties("image")
 	@OneToMany(mappedBy = "image", fetch = FetchType.LAZY)
+	@OrderBy("createDate DESC")
 	private List<Comment> comments;
 
 	@Transient // 데이터베이스에 컬럼을 생성하지 않음

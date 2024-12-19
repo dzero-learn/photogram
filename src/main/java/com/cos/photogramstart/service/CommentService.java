@@ -38,6 +38,6 @@ public class CommentService {
 
     @Transactional
     public void 댓글삭제(CommentDto commentDto) {
-        commentRepository.mDelete(commentDto.getImageId(), commentDto.getUserId());
+        commentRepository.mDelete(commentDto.getImageId(), commentDto.getCommentId());
     }
 }
