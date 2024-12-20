@@ -8,4 +8,6 @@ public class CommentDto {
     private int imageId;
     private int userId;
     private String content;
+
+    // toEntity가 필요없다.
 }

@@ -16,16 +16,15 @@ import org.springframework.web.bind.annotation.*;
 public class CommentApiController {
     private final CommentService commentService;
 
-    @PostMapping("/api/comment/")
+    @PostMapping("/api/comment")
     public ResponseEntity<?> commentSave(@RequestBody CommentDto commentDto, @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        commentDto.setUserId(principalDetails.getUser().getId()); // userId
-        Comment comment = commentService.댓글쓰기(commentDto);
+        Comment comment = commentService.댓글쓰기(commentDto.getContent(), commentDto.getImageId(), principalDetails.getUser().getId()); // content, imageId, userId 넘김
 
-        return new ResponseEntity<>(new CMRespDto<Comment>(1,"댓글쓰기 완료",comment), HttpStatus.CREATED);
+        return new ResponseEntity<>(new CMRespDto<Comment>(1,"댓글쓰기 성공",comment), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/api/comment/{id}")
-    public ResponseEntity<?> commentDelete(@PathVariable int id, @RequestBody CommentDto commentDto, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<?> commentDelete(@PathVariable int id, @RequestBody CommentDto commentDto) {
         commentService.댓글삭제(commentDto);
 
         return new ResponseEntity<>(new CMRespDto<Comment>(1,"댓글삭제 완료",null),HttpStatus.OK);

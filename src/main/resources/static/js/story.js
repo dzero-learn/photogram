@@ -161,28 +161,28 @@ function addComment(imageId) {
 	//console.log(JSON.stringify(data));
 	$.ajax({
 	    type:"POST",
-	    url:"/api/comment/",
+	    url:"/api/comment",
 	    data: JSON.stringify(data),
-	    contentType: "application/json",
+	    contentType: "application/json; charset=utf-8",
 	    dataType: "json"
-	}).done((res)=>{
+	}).done((res)=>{ // res는 항상 통신결과값이 담김
 	    console.log("res:",res);
 	    let comment = res.data;
         let content = `
             <div class="sl__item__contents__comment" id="storyCommentItem-${comment.id}">
                 <p>
                     <b>${comment.user.name} :</b>
-                        ${comment.content}
+                    ${comment.content}
                 </p>
                 <button onClick="deleteComment(${comment.image.id},${comment.id})"><i class="fas fa-times"></i></button>
             </div>`;
 
-        	commentList.prepend(content);
+        commentList.prepend(content);
 	}).fail((err)=>{
 	    console.error("Error:",err);
 	});
 
-	commentInput.val("");
+	commentInput.val(""); // 댓글쓰기란 초기화(오류가 나더라도 빈값을 초기화)
 }
 
 // (5) 댓글 삭제

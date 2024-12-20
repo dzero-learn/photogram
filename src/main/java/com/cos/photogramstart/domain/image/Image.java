@@ -33,11 +33,13 @@ public class Image {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private User user; // 쿼리 짤 때, 굳이 user join 필요x 이미지 조회할때 이 필드 때문에 user정보 같이 들고 온다!
 
+	// 이미지좋아요
 	@OneToMany(mappedBy = "imageId", fetch = FetchType.LAZY)
 	private List<Likes> likes;
 
-	@JsonIgnoreProperties("image")
-	@OneToMany(mappedBy = "image", fetch = FetchType.LAZY)
+	// 댓글
+	@JsonIgnoreProperties({"image"})
+	@OneToMany(mappedBy = "image", fetch = FetchType.LAZY) // mappedBy는 fk에 대한 자바변수를 적어줘야함(comment 객체 안에 image객체 변수명)
 	@OrderBy("createDate DESC")
 	private List<Comment> comments;
 

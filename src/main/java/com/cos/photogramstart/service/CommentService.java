@@ -19,19 +19,22 @@ public class CommentService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Comment 댓글쓰기(CommentDto commentDto) {
+    public Comment 댓글쓰기(String content, int imageId, int userId) {
+        // Tip: 빈객체를 만들 때 id값만 담아서 insert 할 수 있다.
+        // 어차피 db는 id값만 들어가면 되므로 굳이 findById() 사용 할 필요x
+        // 대신 return 시에 image객체는 id값만 가지고 있는 빈 객체를 리턴받는다.
         Image images = new Image();
-        images.setId(commentDto.getImageId());
+        images.setId(imageId);
 
-        User userEntity = userRepository.findById(commentDto.getUserId()).orElseThrow(() -> {
-            throw new CustomException("유저를 찾을 수 없습니다.");
+        User userEntity = userRepository.findById(userId).orElseThrow(() -> {
+            throw new CustomException("유저 아이디를 찾을 수 없습니다.");
         });
 
         // 영속화 저장 사용
         Comment commentEntity = new Comment();
+        commentEntity.setContent(content);
         commentEntity.setImage(images);
         commentEntity.setUser(userEntity);
-        commentEntity.setContent(commentDto.getContent());
 
         return commentRepository.save(commentEntity);
     }

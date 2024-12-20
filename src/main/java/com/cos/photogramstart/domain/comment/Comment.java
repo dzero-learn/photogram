@@ -24,7 +24,7 @@ public class Comment {
     @ManyToOne(fetch = FetchType.EAGER)
     private Image image;
 
-    @JsonIgnoreProperties("images")
+    @JsonIgnoreProperties({"images"}) // 단일 속성일지라도 항상 배열 형식을 사용하는 것이 명시적이고 가독성에 좋음.
     @JoinColumn(name = "userId", nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
