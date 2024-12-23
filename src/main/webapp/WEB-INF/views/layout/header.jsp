@@ -33,7 +33,7 @@
 </head>
 
 <body>
-    <input type="hidden" id="principalId" value="${principal.user.id}" />
+    <input type="hidden" id="principalId" value="${principal.id}" />
 	
 	<header class="header">
 		<div class="container">

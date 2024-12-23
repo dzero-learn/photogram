@@ -5,6 +5,7 @@ import com.cos.photogramstart.domain.comment.CommentRepository;
 import com.cos.photogramstart.domain.image.Image;
 import com.cos.photogramstart.domain.user.User;
 import com.cos.photogramstart.domain.user.UserRepository;
+import com.cos.photogramstart.handler.ex.CustomApiException;
 import com.cos.photogramstart.handler.ex.CustomException;
 import com.cos.photogramstart.web.dto.comment.CommentDto;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,13 @@ public class CommentService {
     }
 
     @Transactional
-    public void 댓글삭제(CommentDto commentDto) {
-        commentRepository.mDelete(commentDto.getImageId(), commentDto.getCommentId());
+    public void 댓글삭제(int id) {
+        try {
+            commentRepository.deleteById(id);
+        } catch (Exception e) {
+            // cf. customException : html 파일 리턴하는 컨트롤러
+            // customApiException : 데이터 리턴 컨트롤러
+            throw new CustomApiException(e.getMessage());
+        }
     }
 }

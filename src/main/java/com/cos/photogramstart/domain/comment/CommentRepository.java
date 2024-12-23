@@ -12,8 +12,4 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     @Query(value = "INSERT INTO comment (imageId, userId, content, createDate) VALUES (:imageId, :userId, :content, now())", nativeQuery = true)
     Comment mSave(int imageId, int userId, String content);
      */
-
-    @Modifying
-    @Query(value = "DELETE FROM comment WHERE id = :commentId AND imageId = :imageId", nativeQuery = true)
-    void mDelete(int imageId, int commentId);
 }

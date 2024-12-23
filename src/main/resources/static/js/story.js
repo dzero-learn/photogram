@@ -6,6 +6,8 @@
 	(4) 댓글쓰기
 	(5) 댓글삭제
  */
+// (0) 현재 로그인한 사용자 아이디
+let principalId = $("#principalId").val();
 
 let page = 0;
 
@@ -72,13 +74,16 @@ function getStoryItem(e) {
                       item += `<div class="sl__item__contents__comment" id="storyCommentItem-${comment.id}">
                               	<p>
                               		<b>${comment.user.name} :</b> ${comment.content}
-                              	</p>
+                              	</p>`;
 
-                              	<button onClick="deleteComment(${e.id},${comment.id})">
-                              	    <i class="fas fa-times"></i>
-                              	</button>
+                      // 코멘트 작성자 본인이면 삭제[x] 버튼 노출
+                      if(principalId == comment.user.id) {
+                        item += `<button onClick="deleteComment(${comment.id})">
+                                    <i class="fas fa-times"></i>
+                                 </button>`;
+                      }
 
-                              </div>`;
+                      item += `</div>`;
                       });
                   }
 
@@ -174,7 +179,7 @@ function addComment(imageId) {
                     <b>${comment.user.name} :</b>
                     ${comment.content}
                 </p>
-                <button onClick="deleteComment(${comment.image.id},${comment.id})"><i class="fas fa-times"></i></button>
+                <button onClick="deleteComment(${comment.id})"><i class="fas fa-times"></i></button>
             </div>`;
 
         commentList.prepend(content);
@@ -186,17 +191,10 @@ function addComment(imageId) {
 }
 
 // (5) 댓글 삭제
-function deleteComment(imageId,commentId) {
-    let data = {
-        imageId : imageId,
-        commentId : commentId
-    };
-
+function deleteComment(commentId) {
     $.ajax({
     	    type:"DELETE",
-    	    url:"/api/comment/",
-    	    data: JSON.stringify(data),
-    	    contentType: "application/json",
+    	    url:`/api/comment/${commentId}`,
     	    dataType: "json"
     	}).done((res)=>{
     	    console.log("res:",res);
