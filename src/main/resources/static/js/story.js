@@ -184,7 +184,8 @@ function addComment(imageId) {
 
         commentList.prepend(content);
 	}).fail((err)=>{
-	    console.error("Error:",err);
+	    console.error("Error:",err.responseJSON.data.content);
+	    alert(err.responseJSON.data.content); // 유효성검사 메시지 알림창 추가
 	});
 
 	commentInput.val(""); // 댓글쓰기란 초기화(오류가 나더라도 빈값을 초기화)
