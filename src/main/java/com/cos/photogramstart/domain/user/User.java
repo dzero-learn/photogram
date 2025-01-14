@@ -56,4 +56,23 @@ public class User {
 	public void createDate() {
 		this.createDate = createDate.now();
 	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", name='" + name + '\'' +
+				", website='" + website + '\'' +
+				", bio='" + bio + '\'' +
+				", email='" + email + '\'' +
+				", phone='" + phone + '\'' +
+				", gender='" + gender + '\'' +
+				", profileImageUrl='" + profileImageUrl + '\'' +
+				", role='" + role + '\'' +
+				// ", images=" + images + 무한참조 방지 : ValidationAdvice.class -> Object arg 변수 출력시 user<->images 무한참조 일어남
+				", createDate=" + createDate +
+				'}';
+	}
 }
