@@ -3,9 +3,11 @@ package com.cos.photogramstart.config.auth;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.cos.photogramstart.domain.user.User;
 
@@ -14,12 +16,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
 @Data
-public class PrincipalDetails implements UserDetails{
+public class PrincipalDetails implements UserDetails, OAuth2User{
 	private static final long serialVersionUID = 1L;
 
 	private User user;
+	private Map<String, Object> attributes;
+		
+	public PrincipalDetails(User user) {
+		this.user = user;
+	}
+	
+	public PrincipalDetails(User user, Map<String, Object> attributes) {
+		this.user = user;
+	}
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -65,5 +75,17 @@ public class PrincipalDetails implements UserDetails{
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	@Override
+	public Map<String, Object> getAttributes() {
+		// TODO Auto-generated method stub
+		return attributes; // {id:343434343, name:공다영, email:rhdek228@gmail.com}
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return (String)attributes.get("name");
 	}
 }

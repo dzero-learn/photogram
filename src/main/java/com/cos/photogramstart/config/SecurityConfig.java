@@ -25,6 +25,7 @@ public class SecurityConfig {
 	
     @Bean
 	SecurityFilterChain configure(HttpSecurity http) throws Exception {
+    	// super 삭제 - 기존 시큐리티가 가지고 있는 기능이 다 비활성화 됨.
     	http.csrf().disable();
     	
     	http.authorizeRequests()
